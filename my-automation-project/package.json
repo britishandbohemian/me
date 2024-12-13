@@ -1,0 +1,27 @@
+{
+  "name": "my-automation-project",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "npm run install-dependencies && nodemon index.js",
+    "run": "node index.js",
+    "install-dependencies": "npm install"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "install": "^0.13.0",
+    "npm": "^10.9.2",
+    "puppeteer": "^23.10.2",
+    "puppeteer-extra": "^3.3.6",
+    "puppeteer-extra-plugin-stealth": "^2.11.2",
+    "puppeteer-firefox": "^0.5.1",
+    "selenium-webdriver": "^4.27.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.0"
+  }
+}
