@@ -298,3 +298,12 @@ echo_info "   cd $PROJECT_DIR"
 echo_info "2. Define your models, controllers, and routes as needed."
 echo_info "3. Start the server in development mode:"
 echo_info "   npm run dev"
+
+
+
+please add this to the script include this please in env-
+
+JWT_SECRET=your_secret_key
+BASE_URL=http://localhost:3000
+EMAIL_USER=kamogelomosiah@gmail.com
+EMAIL_PASS=#Sixmillionby26$

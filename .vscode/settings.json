@@ -1,0 +1,6 @@
+{
+    "editor.fontFamily": "'JetBrains Mono', 'Input Mono', 'Source Code Pro', monospace",
+    "files.autoSave": "onWindowChange",
+    "editor.codeLensFontFamily": "'JetBrains Mono', 'Input Mono', 'Source Code Pro', monospace",
+    "editor.inlayHints.fontFamily": "'JetBrains Mono', 'Input Mono', 'Source Code Pro', monospace"
+}
