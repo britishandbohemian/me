@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+
+  <title>Kamogelo Mosia 2024 - Web Developer and UI/UX Designer</title>
+  <meta name="author" content="Kamogelo Mosia, Web Developer">
+  <meta name="description" content="Dedicated and innovative Web Developer based in South Africa with expertise in UX/UI design, responsive web design, and modern JavaScript frameworks. Proven ability to deliver high-quality, user-centered solutions and stay updated with latest web technologies. Seeking new opportu>nities in tech industry.">
+  <meta name="keywords" content="Web Developer South Africa, User Experience Design, User Interface Design, UX/UI, Responsive Web Design, JavaScript Frameworks, Front-end Technologies, CSS3, HTML5, Web Development Trends, Web Developer Jobs, Tech Industry South Africa, Information Technology, Web Application Development, E-commerce Development, Freelance Web Developer, Digital Technology, Software Development, Website Optimization, SEO, Tech Networking South Africa">
+  <meta name="robots" content="index, follow">
+  <meta name="language" content="English">
+  <meta name="geo.region" content="ZA">
+  <meta name="geo.placename" content="Johannesburg">
+  <meta name="geo.position" content="-26.2041;28.0473">
+  <meta name="ICBM" content="-26.2041, 28.0473">
+  <meta name="topic" content="Web Development Portfolio">
+  <meta name="page-type" content="Portfolio">
+  <meta name="audience" content="All">
+  <meta name="copyright" content="Kamogelo Mosia">
+  <meta name="distribution" content="Global">
+  <meta name="category" content="Web Development">
+
+  <!-- Favicons -->
+  <link href="/assets/img/logo.png" rel="icon">
+  <link href="/assets/img/logo.png" rel="apple-touch-icon">
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Raleway:300,300i,400,400i,500,500i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
+
+  <!-- Vendor CSS Files -->
+  <link href="assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  <link href="assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+  <link href="assets/vendor/boxicons/css/boxicons.min.css" rel="stylesheet">
+  <link href="assets/vendor/glightbox/css/glightbox.min.css" rel="stylesheet">
+  <link href="assets/vendor/remixicon/remixicon.css" rel="stylesheet">
+  <link href="assets/vendor/swiper/swiper-bundle.min.css" rel="stylesheet">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Nanum+Myeongjo:wght@400;700;800&family=Raleway:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900&display=swap" rel="stylesheet">
+
+  <!-- Structured Data for SEO -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    "name": "Kamogelo Mosia",
+    "jobTitle": "Web Developer and UI/UX Designer",
+    "address": {
+      "@type": "PostalAddress",
+      "addressLocality": "Johannesburg",
+      "addressRegion": "Gauteng",
+      "addressCountry": "South Africa"
+    },
+    "email": "mailto:kamogelomosiah@gmail.com",
+    "url": "https://yourdomain.com",
+    "sameAs": [
+      "https://www.linkedin.com/in/kamogelo-mosia-12b26519a/"
+    ]
+  }
+  </script>
+
+
+  <!-- Template Main CSS File -->
+  <link href="assets/css/style.css" rel="stylesheet">
+
+
+</head>
+
+<body>
+
+  <script>
+document.addEventListener('DOMContentLoaded', function () {
+  const phrases = [
+    "Full Stack Web Developer",
+    "Frontend Developer",
+    "Backend Developer",
+    "UI/UX Designer",
+    "React Developer",
+    "Node.js Specialist",
+    "JavaScript Expert",
+    "Responsive Web Designer",
+    "API Integration Specialist",
+    "Web Performance Optimizer"
+  ];
+
+  let currentPhrase = 0;
+  const textElement = document.querySelector('#header h2 span'); // Target the span element
+  let deletePhase = false;
+  let txt = '';
+
+  function typeEffect() {
+    const currentText = phrases[currentPhrase];
+
+    if (deletePhase) {
+      txt = currentText.substring(0, txt.length - 1);
+    } else {
+      txt = currentText.substring(0, txt.length + 1);
+    }
+
+    // Apply fade-in effect only when adding new text
+    if (!deletePhase && txt.length === 1) {
+      textElement.classList.remove('fade-in');
+      void textElement.offsetWidth; // Trigger reflow to restart the animation
+      textElement.classList.add('fade-in');
+    }
+
+    textElement.textContent = txt;
+
+    let typingSpeed = deletePhase ? 50 : 100;
+
+    if (!deletePhase && txt === currentText) {
+      typingSpeed = 2000; // Pause when full text is typed
+      deletePhase = true;
+    } else if (deletePhase && txt === '') {
+      deletePhase = false;
+      currentPhrase = (currentPhrase + 1) % phrases.length; // Move to next phrase
+      typingSpeed = 500; // Pause before starting the next phrase
+    }
+
+    setTimeout(typeEffect, typingSpeed);
+  }
+
+  typeEffect();
+});
+
+
+  </script>
+
+  <!-- ======= Header ======= -->
+  <header id="header">
+    <div class="container">
+
+      <h1><a href="index.html">Kamogelo Mosia</a></h1>
+      <h2 style="height: 40px;padding: 5rem auto 5rem auto;"><span>Web Developer</span> </h2>
+
+      
+      <nav id="navbar" class="navbar">
+        <ul>
+          <li><a class="nav-link active" href="#header">Home</a></li>
+          <li><a class="nav-link" href="#portfolio">Portfolio</a></li>
+          <li><a class="nav-link" href="#contact">Contact</a></li>
+        </ul>
+        <i class="bi bi-list mobile-nav-toggle"></i>
+      </nav><!-- .navbar -->
+
+      <div class="social-links">
+        <a href="https://www.linkedin.com/in/kamogelo-mosia-12b26519a/" class="linkedin"><i class="bi bi-linkedin"></i></a>
+      </div>
+
+    </div>
+  </header><!-- End Header -->
+
+
+
+  <!-- ======= Portfolio Section ======= -->
+  <section id="portfolio" class="portfolio">
+    <div class="container">
+      <div class="section-title">
+        <h2>Portfolio</h2>
+        <p>My Works</p>
+      </div>
+      <div class="row">
+        <div class="col-lg-12 d-flex justify-content-center">
+          <ul id="portfolio-flters">
+            <li data-filter="*" class="filter-active">All</li>
+            <li data-filter=".filter-web">Web</li>
+          </ul>
+        </div>
+      </div>
+      <div class="row portfolio-container">
+        <div class="col-lg-4 col-md-6 portfolio-item filter-app">
+          <div class="portfolio-wrap">
+            <img src="assets/img/image1.png" class="img-fluid" alt="Dr Khabisi, Promotional Sites">
+            <div class="portfolio-info">
+              <h4>Dr Khabisi, Promotional Sites</h4>
+              <p>Promotional Site created to display your brand or business</p>
+              <div class="portfolio-links">
+                <a href="https://britishandbohemian.github.io/DrKhabisi"><i class="bx bx-plus"></i></a>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-4 col-md-6 portfolio-item filter-app">
+          <div class="portfolio-wrap">
+            <img src="assets/img/image2.png" class="img-fluid" alt="Dr Khanyi, Promotional Sites">
+            <div class="portfolio-info">
+              <h4>Dr Khanyi, Promotional Sites</h4>
+              <p>Promotional Site created to display your brand or business</p>
+              <div class="portfolio-links">
+                <a href="https://britishandbohemian.github.io/DrKhanyi"><i class="bx bx-plus"></i></a>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-4 col-md-6 portfolio-item filter-app">
+          <div class="portfolio-wrap">
+            <img src="assets/img/feed.jpg" class="img-fluid" alt="Feed Web application">
+            <div class="portfolio-info">
+              <h4>Feed Web Application</h4>
+              <p>React app created to store your notes</p>
+              <div class="portfolio-links">
+                <a href="https://britishandbohemian.github.io/Feed_App/"><i class="bx bx-plus"></i></a>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-4 col-md-6 portfolio-item filter-app">
+          <div class="portfolio-wrap">
+            <img src="assets/img/image4.png" class="img-fluid" alt="E-commerce web application">
+            <div class="portfolio-info">
+              <h4>E-commerce Web Application</h4>
+              <p>Sign Shop Online was created for the company Signs4sa during my time there</p>
+              <div class="portfolio-links">
+                <a href="https://call-trax.co.za"><i class="bx bx-plus"></i></a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section><!-- End Portfolio Section -->
+
+  <!-- ======= Contact Section ======= -->
+  <section id="contact" class="contact">
+    <div class="container">
+      <div class="section-title">
+        <h2>Contact</h2>
+        <p>Contact Me</p>
+      </div>
+      <div class="row mt-2">
+        <div class="col-md-6 d-flex align-items-stretch">
+          <div class="info-box">
+            <i class="bx bx-map"></i>
+            <h3>My Address</h3>
+            <p>9 Emerald Wood Dove, Glen Eagles Estate, Kempton Park</p>
+          </div>
+        </div>
+        <div class="col-md-6 mt-4 mt-md-0 d-flex align-items-stretch">
+          <div class="info-box">
+            <i class="bx bx-share-alt"></i>
+            <h3>Social Profiles</h3>
+            <div class="social-links">
+              <a href="https://www.linkedin.com/in/kamogelo-mosia-12b26519a/" class="linkedin"><i class="bi bi-linkedin"></i></a>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6 mt-4 d-flex align-items-stretch">
+          <div class="info-box">
+            <i class="bx bx-envelope"></i>
+            <h3>Email Me</h3>
+            <p><a href="mailto:kamogelomosiah@gmail.com" style="color: white;">kamogelomosiah@gmail.com</a></p>
+          </div>
+        </div>
+        <div class="col-md-6 mt-4 d-flex align-items-stretch">
+          <div class="info-box">
+            <i class="bx bx-phone-call"></i>
+            <h3>Call Me</h3>
+            <p>075 036 8089</p>
+          </div>
+        </div>
+        <div class="col-md-6 mt-4 d-flex align-items-stretch">
+          <div class="info-box">
+            <i class="bx bx-phone-call"></i>
+            <h3>Download My Resume</h3>
+            <a style="color: white;padding: 1rem;font-size: 0.8em;" href="cv.pdf">Click here to view Kamogelo's resume</a>
+          </div>
+        </div>
+      </div>
+      <form action="https://formspree.io/f/xgegvage" method="post" role="form" class="php-email-form mt-4">
+        <div class="row">
+          <div class="col-md-6 form-group">
+            <input type="text" name="name" class="form-control" id="name" placeholder="Your Name" required>
+          </div>
+          <div class="col-md-6 form-group mt-3 mt-md-0">
+            <input type="email" class="form-control" name="email" id="email" placeholder="Your Email" required>
+          </div>
+        </div>
+        <div class="form-group mt-3">
+          <input type="text" class="form-control" name="subject" id="subject" placeholder="Subject" required>
+        </div>
+        <div class="form-group mt-3">
+          <textarea class="form-control" name="message" rows="5" placeholder="Message" required></textarea>
+        </div>
+        <div class="my-3">
+          <div class="loading">Loading</div>
+          <div class="error-message"></div>
+          <div class="sent-message">Your message has been sent. Thank you!</div>
+        </div>
+        <div class="text-center"><button type="submit">Send Message</button></div>
+      </form>
+    </div>
+  </section><!-- End Contact Section -->
+
+  
+  <!-- Vendor JS Files -->
+  <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <script src="assets/js/main.js"></script>
+
+</body>
+
+</html>

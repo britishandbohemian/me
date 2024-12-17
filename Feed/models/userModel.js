@@ -27,7 +27,6 @@ const userSchema = new mongoose.Schema(
     },
     password: {
       type: String,
-      required: true,
       minlength: 8,
       select: false,
     },
@@ -51,6 +50,18 @@ const userSchema = new mongoose.Schema(
       type: Date,
       select: false,
     },
+    googleId: {
+      type: String, // Google unique ID
+      unique: true,
+      sparse: true, // Allows multiple nulls
+    },
+    // Optional: Add profile information from Google
+    name: {
+      type: String,
+    },
+    picture: {
+      type: String,
+    },
   },
   { timestamps: true }
 );
@@ -64,6 +75,7 @@ userSchema.pre('save', async function (next) {
 
 // Method to compare passwords
 userSchema.methods.validatePassword = async function (candidatePassword) {
+  if (!this.password) return false; // For Google users without password
   return bcrypt.compare(candidatePassword, this.password);
 };
 

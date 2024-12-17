@@ -3,6 +3,11 @@ const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 const axios = require('axios');
+const { errorHandler } = require('./middleware');
+
+
+
+
 
 // Import user routes
 const userRoutes = require('./routes/userRoutes');
@@ -12,6 +17,10 @@ dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+
+// Centralized Error Handling Middleware (should be the last middleware)
+app.use(errorHandler);
+
 
 // Middleware
 app.use(bodyParser.json());

@@ -3,8 +3,29 @@ const User = require('../models/userModel');
 const jwt = require('jsonwebtoken');
 const EmailService = require('../utils/emailService');
 const { decrypt } = require('../utils/otpEncryption');
+const { verifyGoogleToken } = require('../utils/googleAuth');
+const {
+  AppError,
+  ValidationError,
+  AuthenticationError,
+  AuthorizationError,
+  NotFoundError,
+} = require('../utils/customErrors');
 
-// Helper function for sending error responses
+/**
+ * Helper function for sending success responses.
+ */
+const handleSuccess = (res, statusCode, message, data = null) => {
+  return res.status(statusCode).json({
+    success: true,
+    message,
+    ...(data && { data }),
+  });
+};
+
+/**
+ * Helper function for sending error responses.
+ */
 const handleError = (res, statusCode, message, error = null) => {
   if (error) {
     console.error(message, error);
@@ -16,16 +37,76 @@ const handleError = (res, statusCode, message, error = null) => {
   });
 };
 
-// Helper function for sending success responses
-const handleSuccess = (res, statusCode, message, data = null) => {
-  return res.status(statusCode).json({
-    success: true,
-    message,
-    ...(data && { data }),
-  });
+/**
+ * Google Sign-In
+ */
+exports.googleSignIn = async (req, res) => {
+  const { idToken } = req.body;
+
+  try {
+    if (!idToken) {
+      return handleError(res, 400, 'ID token is required for Google Sign-In.');
+    }
+
+    // Verify the Google ID token
+    const googleUser = await verifyGoogleToken(idToken);
+
+    const { googleId, email, emailVerified, name, picture } = googleUser;
+
+    // Check if user already exists by googleId
+    let user = await User.findOne({ googleId });
+
+    if (!user) {
+      // If not, check if a user with the same email exists
+      user = await User.findOne({ email });
+
+      if (user) {
+        // Link Google account to existing user
+        user.googleId = googleId;
+        user.isEmailVerified = emailVerified || user.isEmailVerified;
+        user.name = name || user.name;
+        user.picture = picture || user.picture;
+      } else {
+        // Create a new user
+        // Generate a unique username based on name
+        let username = name.replace(/\s+/g, '_').toLowerCase();
+        // Ensure username uniqueness
+        let existingUser = await User.findOne({ username });
+        let suffix = 1;
+        while (existingUser) {
+          username = `${username}${suffix}`;
+          existingUser = await User.findOne({ username });
+          suffix++;
+        }
+
+        user = new User({
+          username,
+          email,
+          isEmailVerified: emailVerified,
+          googleId,
+          name,
+          picture,
+        });
+      }
+
+      await user.save();
+    }
+
+    // Generate JWT
+    const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, {
+      expiresIn: '1h',
+    });
+
+    return handleSuccess(res, 200, 'Google Sign-In successful.', { token });
+  } catch (err) {
+    console.error('Error during Google Sign-In:', err);
+    return handleError(res, 500, 'Google Sign-In failed. Please try again later.', err);
+  }
 };
 
-// Verify Email OTP
+/**
+ * Verify Email OTP
+ */
 exports.verifyEmailOtp = async (req, res) => {
   const { email, otp } = req.body;
 
@@ -68,7 +149,9 @@ exports.verifyEmailOtp = async (req, res) => {
   }
 };
 
-// Register User
+/**
+ * Register User
+ */
 exports.registerUser = async (req, res) => {
   const { username, email, password } = req.body;
 
@@ -102,7 +185,9 @@ exports.registerUser = async (req, res) => {
   }
 };
 
-// Resend Email OTP
+/**
+ * Resend Email OTP
+ */
 exports.resendEmailOtp = async (req, res) => {
   const { email } = req.body;
 
@@ -136,7 +221,9 @@ exports.resendEmailOtp = async (req, res) => {
   }
 };
 
-// Login User
+/**
+ * Login User
+ */
 exports.loginUser = async (req, res) => {
   const { email, password } = req.body;
 
@@ -173,14 +260,18 @@ exports.loginUser = async (req, res) => {
   }
 };
 
-// Logout User
+/**
+ * Logout User
+ */
 exports.logoutUser = (req, res) => {
   // Since JWTs are stateless, logout can be handled on the client side by deleting the token.
   // Alternatively, implement token blacklisting if needed.
   return handleSuccess(res, 200, 'Logged out successfully.');
 };
 
-// Request Password Reset
+/**
+ * Request Password Reset
+ */
 exports.requestPasswordReset = async (req, res) => {
   const { email } = req.body;
 
@@ -214,7 +305,9 @@ exports.requestPasswordReset = async (req, res) => {
   }
 };
 
-// Reset Password
+/**
+ * Reset Password
+ */
 exports.resetPassword = async (req, res) => {
   const { email, otp, newPassword } = req.body;
 
@@ -257,7 +350,9 @@ exports.resetPassword = async (req, res) => {
   }
 };
 
-// Get All Users
+/**
+ * Get All Users
+ */
 exports.getAllUsers = async (req, res) => {
   try {
     const users = await User.find().select(
@@ -269,7 +364,9 @@ exports.getAllUsers = async (req, res) => {
   }
 };
 
-// Get User by ID
+/**
+ * Get User by ID
+ */
 exports.getUserById = async (req, res) => {
   const { id } = req.params;
 
@@ -292,7 +389,9 @@ exports.getUserById = async (req, res) => {
   }
 };
 
-// Update User
+/**
+ * Update User
+ */
 exports.updateUser = async (req, res) => {
   const { id } = req.params;
   const updates = req.body;
@@ -324,7 +423,9 @@ exports.updateUser = async (req, res) => {
   }
 };
 
-// Delete User
+/**
+ * Delete User
+ */
 exports.deleteUser = async (req, res) => {
   const { id } = req.params;
 
