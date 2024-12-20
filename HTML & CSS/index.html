@@ -1,0 +1,239 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<title>Kamogelo Mosia - Software Solutions</title>
+		<meta charset="utf-8" />
+		<link rel="icon" href="assets/html5.svg" type="image/x-icon" />
+
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+		<link rel="stylesheet" href="assets/css/main.css" />
+		<noscript><link rel="stylesheet" href="assets/css/noscript.css" /></noscript>
+
+		<style>
+			/* Full viewport height banner */
+			#banner {
+				height: 100vh !important;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				position: relative;
+				overflow: hidden;
+			}
+	
+			#banner .inner {
+				text-align: center;
+				z-index: 2;
+				position: relative;
+				max-width: 800px;
+				padding: 0 20px;
+			}
+	
+			#banner h1 {
+				opacity: 0;
+				transform: translateY(20px);
+				animation: fadeInUp 1s forwards 0.5s;
+			}
+	
+			#banner .content p {
+				opacity: 0;
+				transform: translateY(20px);
+				animation: fadeInUp 1s forwards 1s;
+			}
+	
+			#banner .actions {
+				list-style: none;
+				padding: 0;
+				display: flex;
+				justify-content: center;
+				gap: 15px;
+			}
+	
+			.button {
+				opacity: 0;
+				transform: translateY(20px);
+				animation: fadeInUp 1s forwards 1.5s;
+				transition: transform 0.3s ease;
+			}
+	
+			.button:hover {
+				transform: translateY(-5px);
+			}
+	
+			/* Background subtle animation */
+			#banner::before {
+				content: '';
+				position: absolute;
+				top: 0;
+				left: 0;
+				width: 100%;
+				height: 100%;
+				background: linear-gradient(45deg, rgba(0,0,0,0.05), transparent);
+				animation: subtleMovement 10s ease infinite;
+				z-index: 1;
+			}
+	
+			/* Keyframe animations */
+			@keyframes fadeInUp {
+				to {
+					opacity: 1;
+					transform: translateY(0);
+				}
+			}
+	
+			@keyframes subtleMovement {
+				0%, 100% {
+					transform: scale(1) rotate(0deg);
+				}
+				50% {
+					transform: scale(1.05) rotate(2deg);
+				}
+			}
+	
+			/* Responsive adjustments */
+			@media (max-width: 768px) {
+				#banner h1 {
+					font-size: 2rem;
+				}
+				#banner .content p {
+					font-size: 1rem;
+				}
+			}
+		</style>
+	</head>
+	<body class="is-preload">
+
+		<!-- Wrapper -->
+		<div id="wrapper">
+
+			<!-- Header -->
+			<header id="header" class="alt">
+				<a href="index.html" class="logo">naviv</a>
+				<nav>
+					<a href="#menu">Menu</a>
+				</nav>
+			</header>
+
+			<!-- Menu -->
+			<nav id="menu">
+				<ul class="links">
+					<li><a href="index.html">Home</a></li>
+					<li><a href="projects.html">Projects</a></li>
+					<li><a href="contact.html">Contact</a></li>
+				</ul>
+				<ul class="actions stacked">
+					<li><a href="#projects" class="button primary fit">View Projects</a></li>
+				</ul>
+			</nav>
+
+			<!-- Banner -->
+			<section id="banner" class="major">
+				<div class="inner">
+					<header class="major">
+						<h1>Welcome to My Software Portfolio</h1>
+					</header>
+					<div class="content">
+						<p>Showcasing innovative software solutions to help businesses grow</p>
+						<ul class="actions">
+							<li><a href="#projects" class="button next scrolly">See My Work</a></li>
+						</ul>
+					</div>
+				</div>
+			</section>
+			<!-- Main Content -->
+			<div id="main">
+
+				<!-- Projects Section -->
+				<section id="projects" class="tiles">
+					<article>
+						<span class="image">
+							<img src="/mnt/data/Four_square_images_representing_unique_software_pr.png" alt="Project 1" />
+						</span>
+						<header class="major">
+							<h3><a href="project1.html" class="link">Task Management Web App</a></h3>
+							<p>Modern web-based solution for organizing tasks with a sleek dashboard and calendar.</p>
+						</header>
+					</article>
+
+					<article>
+						<span class="image">
+							<img src="/mnt/data/Four_square_images_representing_unique_software_pr.png" alt="Project 2" />
+						</span>
+						<header class="major">
+							<h3><a href="project2.html" class="link">Mobile Health App</a></h3>
+							<p>Track your fitness goals with a minimalist mobile app, featuring progress graphs.</p>
+						</header>
+					</article>
+
+					<article>
+						<span class="image">
+							<img src="/mnt/data/Four_square_images_representing_unique_software_pr.png" alt="Project 3" />
+						</span>
+						<header class="major">
+							<h3><a href="project3.html" class="link">Financial Tracking App</a></h3>
+							<p>Manage budgets and track savings goals with a user-friendly interface and interactive graphs.</p>
+						</header>
+					</article>
+
+					<article>
+						<span class="image">
+							<img src="/mnt/data/Four_square_images_representing_unique_software_pr.png" alt="Project 4" />
+						</span>
+						<header class="major">
+							<h3><a href="project4.html" class="link">Team Collaboration Platform</a></h3>
+							<p>Enhance team productivity with chat, document sharing, and video conferencing features.</p>
+						</header>
+					</article>
+				</section>
+
+				<!-- Call to Action Section -->
+				<section id="cta">
+					<div class="inner">
+						<header class="major">
+							<h2>Looking for a solution?</h2>
+						</header>
+						<p>If you're looking for a tailored software solution, I am here to help. Let's collaborate to bring your ideas to life.</p>
+						<ul class="actions">
+							<li><a href="contact.html" class="button next">Get in Touch</a></li>
+						</ul>
+					</div>
+				</section>
+
+			</div>
+
+	
+
+		</div>
+
+		<script>
+			document.addEventListener('DOMContentLoaded', () => {
+				const banner = document.getElementById('banner');
+				const button = document.querySelector('.button');
+	
+				// Subtle parallax effect
+				window.addEventListener('scroll', () => {
+					const scrollPosition = window.pageYOffset;
+					banner.style.transform = `translateY(${scrollPosition * 0.3}px)`;
+				});
+	
+				// Subtle button interaction
+				button.addEventListener('mouseenter', () => {
+					button.style.transform = 'scale(1.05)';
+				});
+	
+				button.addEventListener('mouseleave', () => {
+					button.style.transform = 'scale(1)';
+				});
+			});
+		</script>
+
+		<!-- Scripts -->
+		<script src="assets/js/jquery.min.js"></script>
+		<script src="assets/js/jquery.scrolly.min.js"></script>
+		<script src="assets/js/jquery.scrollex.min.js"></script>
+		<script src="assets/js/browser.min.js"></script>
+		<script src="assets/js/breakpoints.min.js"></script>
+		<script src="assets/js/util.js"></script>
+		<script src="assets/js/main.js"></script>
+
+	</body>
+</html>
