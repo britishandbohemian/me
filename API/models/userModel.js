@@ -1,6 +1,8 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
-const { encrypt } = require('../utils/otpEncryption');
+const crypto = require('crypto');
+const { encrypt, decrypt } = require('../utils/otpEncryption'); // Ensure this is correctly imported
+
 
 /**
  * User Schema
@@ -52,6 +54,22 @@ const userSchema = new mongoose.Schema(
     isDeleted: {
       type: Boolean,
       default: false,
+    },
+    emailOtp: {
+      type: String,
+      select: false,
+    },
+    emailOtpExpiry: {
+      type: Date,
+      select: false,
+    },
+    passwordResetOtp: {
+      type: String,
+      select: false, // Exclude by default
+    },
+    passwordResetOtpExpiry: {
+      type: Date,
+      select: false,
     },
   },
   { timestamps: true }
@@ -117,6 +135,67 @@ userSchema.methods.setPassword = async function (newPassword) {
   this.password = await bcrypt.hash(newPassword, 12);
   await this.save();
 };
+
+/**
+ * Method: Generate and encrypt OTP for email verification
+ * @returns {string} Plain OTP (to be sent to the user)
+ */
+/**
+ * Generate and encrypt OTP for email verification
+ * @returns {string} Plain OTP (to be sent to the user)
+ */
+userSchema.methods.setEmailOtp = function () {
+  const otp = crypto.randomInt(100000, 999999).toString(); // Generate a 6-digit OTP
+  this.emailOtp = encrypt(otp); // Encrypt the OTP
+  this.emailOtpExpiry = Date.now() + 10 * 60 * 1000; // OTP valid for 10 minutes
+  return otp; // Return plain OTP for sending
+};
+
+/**
+ * Validate OTP
+ * @param {string} otp - Plain OTP to validate
+ * @returns {boolean} True if valid, false otherwise
+ */
+userSchema.methods.validateOtp = function (otp) {
+  try {
+    const decryptedOtp = decrypt(this.emailOtp); // Decrypt stored OTP
+    return decryptedOtp === otp && Date.now() < this.emailOtpExpiry;
+  } catch (error) {
+    console.error('OTP Validation Error:', error.message);
+    return false;
+  }
+};
+
+
+/**
+ * Generate and encrypt OTP for password reset
+ * @returns {string} Plain OTP (to be sent to the user)
+ */
+userSchema.methods.setPasswordResetOtp = function () {
+  const otp = crypto.randomInt(100000, 999999).toString(); // Generate a 6-digit OTP
+  console.log('Generated OTP:', otp); // Debugging
+  this.passwordResetOtp = encrypt(otp); // Encrypt the OTP
+  this.passwordResetOtpExpiry = Date.now() + 10 * 60 * 1000; // OTP valid for 10 minutes
+  console.log('Encrypted OTP:', this.passwordResetOtp); // Debugging
+  return otp; // Return plain OTP
+};
+
+
+/**
+ * Validate password reset OTP
+ * @param {string} otp - Plain OTP to validate
+ * @returns {boolean} True if valid, false otherwise
+ */
+userSchema.methods.validatePasswordResetOtp = function (otp) {
+  try {
+    const decryptedOtp = decrypt(this.passwordResetOtp); // Decrypt stored OTP
+    return decryptedOtp === otp && Date.now() < this.passwordResetOtpExpiry;
+  } catch (error) {
+    console.error('Password Reset OTP Validation Error:', error.message);
+    return false;
+  }
+};
+
 
 /**
  * Model Export

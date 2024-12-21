@@ -239,20 +239,16 @@ exports.requestPasswordReset = async (req, res) => {
   const { email } = req.body;
 
   try {
-    // Validate input
     if (!email) {
       return handleError(res, 400, 'Email is required to request a password reset.');
     }
 
-    // Explicitly select passwordResetOtp and passwordResetOtpExpiry
     const user = await User.findOne({ email }).select('+passwordResetOtp +passwordResetOtpExpiry');
-
     if (!user) {
       return handleError(res, 404, 'User not found.');
     }
 
-    // Set Password Reset OTP
-    const otp = user.setPasswordResetOtp(); // Set encrypted OTP and get plain OTP
+    const otp = user.setPasswordResetOtp(); // Generate and encrypt OTP
     await user.save();
 
     // Send OTP via EmailService
@@ -268,6 +264,9 @@ exports.requestPasswordReset = async (req, res) => {
   }
 };
 
+
+
+
 /**
  * Reset Password
  */
@@ -275,40 +274,29 @@ exports.resetPassword = async (req, res) => {
   const { email, otp, newPassword } = req.body;
 
   try {
-    // Validate input
     if (!email || !otp || !newPassword) {
       return handleError(res, 400, 'Email, OTP, and new password are required.');
     }
 
-    // Explicitly select passwordResetOtp and passwordResetOtpExpiry
     const user = await User.findOne({ email }).select('+passwordResetOtp +passwordResetOtpExpiry');
-
     if (!user) {
       return handleError(res, 404, 'User not found.');
     }
 
-    if (!user.passwordResetOtp || !user.passwordResetOtpExpiry) {
-      return handleError(res, 400, 'No password reset request found. Please request a new one.');
+    console.log('Retrieved Encrypted OTP:', user.passwordResetOtp); // Debugging
+
+    if (!user.validatePasswordResetOtp(otp)) {
+      return handleError(res, 400, 'Invalid or expired OTP.');
     }
 
-    if (user.passwordResetOtpExpiry < Date.now()) {
-      return handleError(res, 400, 'OTP has expired. Please request a new one.');
-    }
+    await user.setPassword(newPassword);
+    user.passwordResetOtp = undefined;
+    user.passwordResetOtpExpiry = undefined;
+    await user.save();
 
-    // Decrypt the stored Password Reset OTP
-    const decryptedResetOtp = decrypt(user.passwordResetOtp);
-
-    if (otp === decryptedResetOtp) {
-      user.password = newPassword;
-      user.passwordResetOtp = undefined;
-      user.passwordResetOtpExpiry = undefined;
-      await user.save();
-
-      return handleSuccess(res, 200, 'Password has been reset successfully.');
-    } else {
-      return handleError(res, 400, 'Invalid OTP. Please try again.');
-    }
+    return handleSuccess(res, 200, 'Password has been reset successfully.');
   } catch (err) {
+    console.error(err); // Debugging
     return handleError(res, 500, 'Failed to reset password. Please try again later.', err);
   }
 };
