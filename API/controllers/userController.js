@@ -5,24 +5,7 @@ const { decrypt } = require('../utils/otpEncryption');
 const { verifyGoogleToken } = require('../utils/googleAuth');
 const { ValidationError, NotFoundError } = require('../utils/customErrors');
 
-/**
- * Helper function for sending success responses.
- */
-const handleSuccess = (res, statusCode, message, data = null) => {
-  return res.status(statusCode).json({
-    success: true,
-    message,
-    ...(data && { data }),
-  });
-};
 
-/**
- * Helper function for sending error responses.
- */
-const handleError = (res, statusCode, message, error = null) => {
-  if (error) console.error(message, error);
-  return res.status(statusCode).json({ success: false, message });
-};
 
 /**
  * Generate JWT Token
@@ -118,109 +101,6 @@ exports.registerUser = async (req, res) => {
   }
 };
 
-/**
- * Change User Role
- */
-exports.changeUserRole = async (req, res) => {
-  const { id } = req.params;
-  const { role } = req.body;
-
-  try {
-    const validRoles = ['user', 'admin', 'moderator'];
-    if (!validRoles.includes(role)) throw new ValidationError('Invalid role.');
-
-    const user = await User.findByIdAndUpdate(id, { role }, { new: true });
-    if (!user) throw new NotFoundError('User not found.');
-
-    return handleSuccess(res, 200, 'Role updated successfully.', { user });
-  } catch (err) {
-    return handleError(res, 400, err.message, err);
-  }
-};
-
-/**
- * Soft Delete User
- */
-exports.deleteUser = async (req, res) => {
-  const { id } = req.params;
-
-  try {
-    const user = await User.findById(id);
-    if (!user) throw new NotFoundError('User not found.');
-
-    await user.softDelete();
-
-    return handleSuccess(res, 200, 'User soft-deleted.');
-  } catch (err) {
-    return handleError(res, 400, err.message, err);
-  }
-};
-
-/**
- * Restore User
- */
-exports.restoreUser = async (req, res) => {
-  const { id } = req.params;
-
-  try {
-    const user = await User.findById(id);
-    if (!user) throw new NotFoundError('User not found.');
-    if (!user.isDeleted) throw new ValidationError('User is not deleted.');
-
-    await user.restore();
-    return handleSuccess(res, 200, 'User restored successfully.');
-  } catch (err) {
-    return handleError(res, 400, err.message, err);
-  }
-};
-
-/**
- * Get All Users
- */
-exports.getAllUsers = async (req, res) => {
-  try {
-    const users = await User.find().select('-password');
-    return handleSuccess(res, 200, 'Users retrieved.', { users });
-  } catch (err) {
-    return handleError(res, 500, 'Failed to retrieve users.', err);
-  }
-};
-
-/**
- * Get User by ID
- */
-exports.getUserById = async (req, res) => {
-  const { id } = req.params;
-
-  try {
-    const user = await User.findById(id).select('-password');
-    if (!user) throw new NotFoundError('User not found.');
-
-    return handleSuccess(res, 200, 'User retrieved.', { user });
-  } catch (err) {
-    return handleError(res, 400, err.message, err);
-  }
-};
-
-/**
- * Update User
- */
-exports.updateUser = async (req, res) => {
-  const { id } = req.params;
-  const updates = req.body;
-
-  try {
-    const prohibitedFields = ['password', 'emailOtp', 'emailOtpExpiry'];
-    prohibitedFields.forEach((field) => delete updates[field]);
-
-    const user = await User.findByIdAndUpdate(id, updates, { new: true }).select('-password');
-    if (!user) throw new NotFoundError('User not found.');
-
-    return handleSuccess(res, 200, 'User updated.', { user });
-  } catch (err) {
-    return handleError(res, 400, err.message, err);
-  }
-};
 
 
 /**
@@ -265,8 +145,6 @@ exports.requestPasswordReset = async (req, res) => {
 };
 
 
-
-
 /**
  * Reset Password
  */
@@ -300,7 +178,6 @@ exports.resetPassword = async (req, res) => {
     return handleError(res, 500, 'Failed to reset password. Please try again later.', err);
   }
 };
-
 
 
 /**
@@ -375,6 +252,154 @@ exports.loginUser = async (req, res) => {
     return handleSuccess(res, 200, 'Login successful.', { token });
   } catch (err) {
     return handleError(res, 500, 'Login failed. Please try again later.', err);
+  }
+};
+
+/**
+ * Helper function for sending success responses.
+ */
+const handleSuccess = (res, statusCode, message, data = null) => {
+  return res.status(statusCode).json({
+    success: true,
+    message,
+    ...(data && { data }),
+  });
+};
+
+/**
+ * Helper function for sending error responses.
+ */
+const handleError = (res, statusCode, message, error = null) => {
+  if (error) console.error(message, error);
+  return res.status(statusCode).json({ success: false, message });
+};
+
+/**
+ * Ensure the requester is an admin.
+ * @param {Object} req - Express request object
+ * @returns {void}
+ */
+const ensureAdmin = (req) => {
+  const { role } = req.body;
+  if (role !== 'admin') {
+    throw new ValidationError('You must be an admin to perform this action.');
+  }
+};
+
+/**
+ * Get All Users
+ */
+exports.getAllUsers = async (req, res) => {
+  try {
+    ensureAdmin(req);
+
+    const users = await User.find().select('-password');
+    return handleSuccess(res, 200, 'Users retrieved successfully.', users);
+  } catch (err) {
+    return handleError(res, 403, err.message);
+  }
+};
+
+/**
+ * Get User by ID
+ */
+exports.getUserById = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    ensureAdmin(req);
+
+    const user = await User.findById(id).select('-password');
+    if (!user) throw new NotFoundError('User not found.');
+
+    return handleSuccess(res, 200, 'User retrieved successfully.', user);
+  } catch (err) {
+    return handleError(res, 403, err.message);
+  }
+};
+
+/**
+ * Update User
+ */
+exports.updateUser = async (req, res) => {
+  const { id } = req.params;
+  const updates = req.body;
+
+  try {
+    ensureAdmin(req);
+
+    const prohibitedFields = ['password', 'emailOtp', 'emailOtpExpiry', 'passwordResetOtp', 'passwordResetOtpExpiry'];
+    prohibitedFields.forEach((field) => delete updates[field]);
+
+    const user = await User.findByIdAndUpdate(id, updates, { new: true }).select('-password');
+    if (!user) throw new NotFoundError('User not found.');
+
+    return handleSuccess(res, 200, 'User updated successfully.', user);
+  } catch (err) {
+    return handleError(res, 403, err.message);
+  }
+};
+
+/**
+ * Delete User
+ */
+exports.deleteUser = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    ensureAdmin(req);
+
+    const user = await User.findById(id);
+    if (!user) throw new NotFoundError('User not found.');
+
+    await user.softDelete();
+    return handleSuccess(res, 200, 'User soft-deleted successfully.');
+  } catch (err) {
+    return handleError(res, 403, err.message);
+  }
+};
+
+/**
+ * Restore User
+ */
+exports.restoreUser = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    ensureAdmin(req);
+
+    const user = await User.findById(id);
+    if (!user) throw new NotFoundError('User not found.');
+    if (!user.isDeleted) throw new ValidationError('User is not deleted.');
+
+    await user.restore();
+    return handleSuccess(res, 200, 'User restored successfully.');
+  } catch (err) {
+    return handleError(res, 403, err.message);
+  }
+};
+
+/**
+ * Change User Role
+ */
+exports.changeUserRole = async (req, res) => {
+  const { id } = req.params;
+  const { role } = req.body;
+
+  try {
+    ensureAdmin(req);
+
+    const validRoles = ['user', 'admin', 'moderator'];
+    if (!validRoles.includes(role)) {
+      throw new ValidationError(`Invalid role. Allowed roles are: ${validRoles.join(', ')}`);
+    }
+
+    const user = await User.findByIdAndUpdate(id, { role }, { new: true });
+    if (!user) throw new NotFoundError('User not found.');
+
+    return handleSuccess(res, 200, 'User role updated successfully.', user);
+  } catch (err) {
+    return handleError(res, 403, err.message);
   }
 };
 

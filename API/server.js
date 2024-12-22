@@ -8,7 +8,7 @@ const { errorHandler } = require('./middleware');
 
 // Import user routes
 const userRoutes = require('./routes/userRoutes');
-
+ 
 // Import generic CRUD routes
 const genericRoutes = require('./routes/genericRoutes');
 

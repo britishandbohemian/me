@@ -11,13 +11,13 @@ const {
   getUserById,
   updateUser,
   deleteUser,
-  restoreUser, // New route for restoring soft-deleted users
-  changeUserRole, // New route for changing user roles
+  restoreUser,
+  changeUserRole,
 } = require('../controllers/userController');
 
 const router = express.Router();
 const { body, param } = require('express-validator');
-const { validateRequest, authenticateToken, authorizeRoles } = require('../middleware'); // Middleware for role-based access control
+const { validateRequest } = require('../middleware');
 
 /**
  * Authentication Routes
@@ -53,7 +53,7 @@ router.post(
 );
 
 // Logout Route
-router.post('/logout', authenticateToken, logoutUser);
+router.post('/logout', logoutUser);
 
 /**
  * Email Verification Routes
@@ -105,60 +105,53 @@ router.post(
 );
 
 /**
- * User Management Routes (Protected)
+ * User Management Routes (Admin-Only Access)
  */
 
 // Get All Users
-router.get('/', authenticateToken, authorizeRoles('admin'), getAllUsers);
+router.post('/getUsers', getAllUsers);
 
 // Get User by ID
-router.get(
-  '/:id',
-  [
-    param('id').isMongoId().withMessage('Invalid user ID format.'),
-    validateRequest,
-  ],
-  authenticateToken,
+router.post(
+  '/getUser/:id',
+  [param('id').isMongoId().withMessage('Invalid user ID format.')],
+  validateRequest,
   getUserById
 );
 
 // Update User
 router.put(
-  '/:id',
+  '/updateUser/:id',
   [
     param('id').isMongoId().withMessage('Invalid user ID format.'),
     validateRequest,
   ],
-  authenticateToken,
   updateUser
 );
 
 // Delete User (Soft Delete)
 router.delete(
-  '/:id',
+  '/deleteUser/:id',
   [
     param('id').isMongoId().withMessage('Invalid user ID format.'),
     validateRequest,
   ],
-  authenticateToken,
   deleteUser
 );
 
-// Restore User (Soft Deleted)
+// Restore User
 router.post(
-  '/:id/restore',
+  '/restoreUser/:id/restore',
   [
     param('id').isMongoId().withMessage('Invalid user ID format.'),
     validateRequest,
   ],
-  authenticateToken,
-  authorizeRoles('admin'),
   restoreUser
 );
 
 // Change User Role
 router.put(
-  '/:id/role',
+  '/changeUserRole/:id/role',
   [
     param('id').isMongoId().withMessage('Invalid user ID format.'),
     body('role')
@@ -166,8 +159,6 @@ router.put(
       .withMessage('Invalid role value.'),
     validateRequest,
   ],
-  authenticateToken,
-  authorizeRoles('admin'),
   changeUserRole
 );
 
