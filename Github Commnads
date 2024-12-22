@@ -1,0 +1,87 @@
+Here’s a basic list of Git commands for working with branches, committing, pulling, and pushing in Linux. You can use these commands as a quick reference. Below is the content formatted as a README file:
+
+---
+
+# Git Commands Reference
+
+This document contains basic Git commands to help you work with branches, commit changes, and push/pull to a repository.
+
+## 1. **Check the current Git configuration**
+```bash
+git config --list
+```
+
+## 2. **Clone a repository**
+```bash
+git clone <repository_url>
+```
+
+## 3. **Check the current branch**
+```bash
+git branch
+```
+
+## 4. **List all branches (local and remote)**
+```bash
+git branch -a
+```
+
+## 5. **Create a new branch**
+```bash
+git checkout -b <branch_name>
+```
+
+## 6. **Switch to an existing branch**
+```bash
+git checkout <branch_name>
+```
+
+## 7. **Pull the latest changes from the remote branch**
+```bash
+git pull origin <branch_name>
+```
+
+## 8. **Stage changes for commit**
+```bash
+git add <file_name>      # Add a specific file
+git add .                # Add all changes in the current directory
+```
+
+## 9. **Commit changes**
+```bash
+git commit -m "Your commit message here"
+```
+
+## 10. **Push changes to a remote branch**
+```bash
+git push origin <branch_name>
+```
+
+## 11. **Fetch all branches from the remote repository**
+```bash
+git fetch --all
+```
+
+## 12. **Merge another branch into the current branch**
+```bash
+git merge <branch_name>
+```
+
+## 13. **View the commit history**
+```bash
+git log
+```
+
+## 14. **Check the status of the repository**
+```bash
+git status
+```
+
+## 15. **Discard changes in a file**
+```bash
+git checkout -- <file_name>
+```
+
+---
+
+You can save this as a file called `README.md` for reference. Let me know if you'd like additional commands or more details!
